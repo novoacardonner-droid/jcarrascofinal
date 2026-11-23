@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>jcarrasco_tattoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--surface:#080E0E;--ink:#EAF4F3;--muted:#8FA8A6;--line:#1F3436;--violet:#0B4F52;--violet-t:#2FA6A0;--on-violet:#FFFFFF;--turq:#0A6B60;--teal-t:#1AA595;--on-turq:#FFFFFF;--red:#FF6B6B;--teal:#1AA595;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--surface:#080E0E;--ink:#EAF4F3;--muted:#8FA8A6;--line:#1F3436;--violet:#0B4F52;--violet-t:#2FA6A0;--on-violet:#FFFFFF;--turq:#0A6B60;--teal-t:#1AA595;--on-turq:#FFFFFF;--red:#FF6B6B;--teal:#1AA595;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--surface:#080E0E;--ink:#EAF4F3;--muted:#8FA8A6;--line:#1F3436;--violet:#0B4F52;--violet-t:#2FA6A0;--on-violet:#FFFFFF;--turq:#0A6B60;--teal-t:#1AA595;--on-turq:#FFFFFF;--red:#FF6B6B;--teal:#1AA595;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:110px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--violet-t);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:16px 18px 10px;border-bottom:3px solid var(--turq)}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+h1{font:800 32px/1.1 "Outfit","DM Sans",system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+#sub{margin:4px 0 12px;color:var(--muted)}
+.link{background:none;border:0;color:var(--violet-t);text-decoration:underline;padding:6px 0;cursor:pointer;font-size:14px}
+.tabs{display:flex;gap:6px}
+.tabs button{flex:1;padding:9px 0;border-radius:999px;border:1.5px solid var(--line);background:transparent;cursor:pointer;font-weight:500}
+.tabs button[aria-pressed="true"]{background:var(--violet);color:var(--on-violet);border-color:var(--violet)}
+main{padding:6px 18px;max-width:640px;margin:0 auto}
+.day{margin:22px 0 10px;padding-bottom:6px;border-bottom:2px dashed var(--turq);font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;border-left:5px solid var(--turq);padding:14px;margin-bottom:10px;display:grid;grid-template-columns:72px 1fr;gap:12px}
+.time{font:800 24px/1 "Outfit","DM Sans",system-ui,sans-serif;color:var(--violet-t)}
+.dur{display:block;font:400 12px/1.3 "DM Sans",sans-serif;color:var(--muted);margin-top:6px}
+.name{font-weight:700;font-size:17px}
+.piece{color:var(--muted);margin:2px 0 8px;overflow-wrap:anywhere}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chip{font-size:13px;font-weight:500;border:1.5px solid currentColor;border-radius:999px;padding:1px 10px}
+.ok{color:var(--teal-t)}.warn{color:var(--red)}.info{color:var(--violet-t)}
+.notes{font-size:14px;color:var(--muted);margin:0 0 8px;overflow-wrap:anywhere}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1.5px solid var(--line);background:transparent;border-radius:10px;padding:7px 12px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;font-weight:500}
+.btn.main{background:var(--violet);border-color:var(--violet);color:var(--on-violet)}
+.btn.bad{color:var(--red);border-color:var(--red)}
+.empty{text-align:center;color:var(--muted);padding:50px 10px}
+#fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--turq);color:var(--on-turq);border:0;border-radius:999px;padding:15px 22px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+dialog{border:0;border-radius:20px 20px 0 0;width:100%;max-width:560px;margin:auto auto 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));background:var(--surface);color:var(--ink);max-height:92vh;overflow:auto}
+dialog::backdrop{background:rgba(10,8,25,.55)}
+dialog h2{font:800 22px/1.2 "Outfit","DM Sans",system-ui,sans-serif;margin:0 0 14px}
+label{display:block;font-size:14px;font-weight:500;margin-bottom:12px}
+input,textarea{display:block;width:100%;margin-top:4px;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-size:16px}
+textarea{min-height:76px;resize:vertical}
+.money{position:relative;margin-top:4px}
+.money input{margin-top:0;padding-left:26px}
+.money span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.row{display:flex;gap:10px}.row>label{flex:1;min-width:0}
+.err{color:var(--red);min-height:1.4em;margin:0 0 8px;font-size:14px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.bar .gap{margin-right:auto}
+.banner{background:var(--surface);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:8px 12px;margin:14px 0 0;font-size:14px}
+.banner.ok{border-color:var(--teal);color:var(--teal-t)}
+.top div{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 10px}
+.cal-head h2{font:800 20px/1.2 "Outfit","DM Sans",system-ui,sans-serif;margin:0;text-align:center;flex:1}
+.cal-nav{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:transparent;cursor:pointer;font-size:20px;line-height:1}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-w{text-align:center;font-size:12px;color:var(--muted);padding:4px 0}
+.cd{aspect-ratio:1;border:1.5px solid #2F4B63;border-radius:10px;background:#2F4B63;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:0;font-weight:500}
+.cd small{font-size:11px;line-height:1;margin-top:2px;min-height:11px}
+.cd.pend{background:#C8A24A;border-color:#C8A24A;color:#0B0B0B;font-weight:700}
+.cd.onlydone{border-color:#C8A24A}
+.cd.today{box-shadow:inset 0 0 0 2px #fff}
+.cd.sel{outline:3px solid var(--violet-t);outline-offset:1px}
+.search{margin-top:12px}
+.bkn{background:var(--surface);border:1.5px solid var(--violet-t);border-radius:10px;padding:10px 12px;margin:14px 0 0;font-size:14px}
+.xprev{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;line-height:1.5}
+.xrow{display:block;width:100%;text-align:left;margin-bottom:8px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.th{position:relative;width:84px;height:84px}
+.th img{width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.th button{position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:#000;color:#fff;border:1px solid var(--line);padding:0;font-size:14px;cursor:pointer}
+.pv img{width:100%;border-radius:12px;margin:0 0 12px;display:block}
+#s-cv{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block;margin:8px 0 12px}
+.fin{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px}
+.fin h3{margin:0 0 10px;font-size:16px}
+.fin .g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.fin .g b{display:block;font-size:17px}.fin .g span{display:block;font-size:12px;color:var(--muted)}
+.fin p{margin:10px 0 0;font-size:12px;color:var(--muted)}
+.cd.blk{background:#C8A24A;border-color:#C8A24A;color:#0B0B0B;font-weight:700}
+.cd.blk small{font-size:13px;font-weight:700}
+.krow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.cal-sum{margin:12px 0 0;color:var(--muted);font-size:14px;text-align:center}
+.cal-leg{margin:4px 0 0;color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>Agenda</h1><div><button class="link" id="rh">Hora de avisos</button><button class="link" id="tn">Probar avisos</button><button class="link" id="bk">Copia de seguridad</button></div></div>
+  <p id="sub"></p>
+  <div class="tabs"><button id="t-next" aria-pressed="true">Próximas</button><button id="t-hist" aria-pressed="false">Historial</button><button id="t-cal" aria-pressed="false">Calendario</button></div>
+  <input id="q" type="search" class="search" placeholder="Buscar cliente, teléfono, @usuario o tatuaje" autocomplete="off" autocapitalize="none" aria-label="Buscar citas">
+</header>
+<main><div id="warn"></div><div id="note"></div><div id="bkbn"></div><div id="list"></div></main>
+<button id="fab">Nueva cita</button>
+
+<dialog id="dlg">
+  <h2 id="dt">Nueva cita</h2>
+  <label>Cliente<input id="f-name" autocomplete="off"></label>
+  <label>WhatsApp o usuario de Instagram<input id="f-phone" placeholder="+56 9 0000 0000 o @usuario" autocomplete="off" autocapitalize="none"></label>
+  <div class="row"><label>Fecha<input id="f-date" type="date"></label><label>Hora<input id="f-time" type="time"></label></div>
+  <label>Duración estimada (horas)<input id="f-dur" type="number" inputmode="decimal" min="0.5" step="0.5"></label>
+  <label>Diseño y zona<input id="f-piece" autocomplete="off"></label>
+  <div class="row"><label>Precio<div class="money"><span>$</span><input id="f-price" type="number" inputmode="decimal" min="0"></div></label><label>Abono (adelanto)<div class="money"><span>$</span><input id="f-dep" type="number" inputmode="decimal" min="0"></div></label></div>
+  <p style="margin:14px 0 0;font-weight:600">Fotos de referencia</p>
+  <div class="thumbs" id="f-thumbs"></div>
+  <button class="btn" id="f-addph" type="button">Agregar fotos</button><input id="f-file" type="file" accept="image/*" multiple hidden>
+  <p class="err" id="f-phnote" style="min-height:1.2em;margin:6px 0 0"></p>
+  <label>Notas<textarea id="f-notes"></textarea></label>
+  <p class="err" id="err"></p>
+  <div class="bar"><button class="btn bad gap" id="del" hidden>Eliminar</button><button class="btn" id="cancel">Cerrar</button><button class="btn main" id="save">Guardar cita</button></div>
+</dialog>
+
+<dialog id="xdlg">
+  <h2>Intercambiar citas</h2>
+  <div id="x-body"></div>
+  <div class="bar" id="x-bar"></div>
+</dialog>
+
+<dialog id="pdlg">
+  <h2 id="p-title">Fotos</h2>
+  <div id="p-body" class="pv"></div>
+  <div class="bar"><button class="btn main" id="p-close">Cerrar</button></div>
+</dialog>
+
+<dialog id="sdlg">
+  <h2>Compartir disponibilidad</h2>
+  <p style="margin-top:0;color:var(--muted)">Se envía una foto del mes que ves en el calendario, con los días libres en amarillo. No incluye nombres ni datos de otras citas.</p>
+  <canvas id="s-cv" width="1080" height="1350"></canvas>
+  <p id="s-txt" style="margin:0 0 8px"></p>
+  <p class="err" id="s-note" style="min-height:1.4em"></p>
+  <div class="bar"><button class="btn" id="s-close">Cerrar</button><button class="btn main" id="s-img">Compartir foto</button></div>
+</dialog>
+
+<dialog id="kdlg">
+  <h2>Días bloqueados</h2>
+  <p style="margin-top:0;color:var(--muted)">Marca vacaciones, viajes o días libres. La app te avisará si intentas agendar una cita en esos días.</p>
+  <div class="row"><label>Desde<input id="k-from" type="date"></label><label>Hasta<input id="k-to" type="date"></label></div>
+  <label>Motivo (opcional)<input id="k-label" placeholder="Vacaciones, viaje, día libre…" autocomplete="off"></label>
+  <p class="err" id="kmsg" style="min-height:1.4em"></p>
+  <div id="klist"></div>
+  <div class="bar"><button class="btn" id="kclose">Cerrar</button><button class="btn main" id="ksave">Bloquear</button></div>
+</dialog>
+
+<dialog id="rdlg">
+  <h2>Hora de los avisos</h2>
+  <p style="margin-top:0;color:var(--muted)">Elige a qué hora quieres recibir el aviso, el día anterior a cada cita.</p>
+  <label>Hora<input id="r-time" type="time"></label>
+  <p class="err" id="rmsg" style="min-height:1.4em"></p>
+  <div class="bar"><button class="btn" id="rclose">Cerrar</button><button class="btn main" id="rsave">Guardar hora</button></div>
+</dialog>
+
+<dialog id="bdlg">
+  <h2>Copia de seguridad</h2>
+  <p style="margin-top:0;color:var(--muted)">Las citas se guardan solo en este teléfono. Envía una copia a tu correo para tenerla guardada en la nube. Si cambias de teléfono, la restauras desde ese archivo. El correo no incluye las fotos: para una copia con fotos usa el botón de abajo y elige Drive.</p>
+  <label>Email para recibir la copia<input id="b-mail" type="email" inputmode="email" autocomplete="off" autocapitalize="none" placeholder="tucorreo@gmail.com"></label>
+  <div class="acts" style="margin:10px 0 16px"><button class="btn main" id="bmail">Enviar copia por email</button><button class="btn main" id="bfull">Copia completa con fotos (Drive)</button></div>
+  <label>Texto de la copia<textarea id="bt" style="min-height:110px;font-size:13px"></textarea></label>
+  <input id="b-file" type="file" accept=".json,application/json,text/plain" hidden>
+  <p class="err" id="bmsg" style="min-height:1.4em"></p>
+  <div class="bar"><button class="btn" id="bclose">Cerrar</button><button class="btn" id="bfile">Restaurar desde archivo</button><button class="btn" id="brest">Restaurar texto</button><button class="btn main" id="bcopy">Copiar</button></div>
+</dialog>
+
+<script>
+const KEY = "tattoo-agenda-v1", BKEY = "tattoo-bloqueos-v1";
+let calBlockMode = false, blocks = [], warnSig = null, items = [], tab = "next", editId = null, memOnly = false, armed = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ymd = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const money = n => "$" + Number(n || 0).toLocaleString("es", {maximumFractionDigits: 2});
+
+function load() {
+  try { const r = localStorage.getItem(KEY); items = r ? JSON.parse(r) : []; if (!Array.isArray(items)) items = []; }
+  catch (e) { items = []; memOnly = true; }
+  try { const r = localStorage.getItem(BKEY); blocks = r ? JSON.parse(r) : []; if (!Array.isArray(blocks)) blocks = []; }
+  catch (e) { blocks = []; }
+}
+function saveBlocks() {
+  try { localStorage.setItem(BKEY, JSON.stringify(blocks)); } catch (e) { memOnly = true; }
+  render();
+}
+const hm = t => { const [h, m] = String(t).split(":").map(Number); return h * 60 + m; };
+const hhmm = m => String(Math.floor(m / 60) % 24).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+const fmt12 = t => { const [h, m] = t.split(":").map(Number); return ((h % 12) || 12) + ":" + String(m).padStart(2, "0") + " " + (h < 12 ? "AM" : "PM"); };
+const durOf = a => (+a.dur > 0 ? +a.dur : 2) * 60;
+const addDays = (ds, n) => { const d = new Date(ds + "T00:00"); d.setDate(d.getDate() + n); return ymd(d); };
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+function mergeBlocks() {
+  blocks.sort((a, b) => a.from.localeCompare(b.from));
+  const out = [];
+  blocks.forEach(b => {
+    const p = out[out.length - 1];
+    if (p && (p.label || "") === (b.label || "") && b.from <= addDays(p.to, 1)) { if (b.to > p.to) p.to = b.to; } else out.push(b);
+  });
+  blocks = out;
+}
+function toggleDay(ds) {
+  const b = blockOn(ds);
+  if (b) {
+    blocks = blocks.filter(x => x !== b);
+    if (b.from < ds) blocks.push({id: newId(), from: b.from, to: addDays(ds, -1), label: b.label || ""});
+    if (ds < b.to) blocks.push({id: newId(), from: addDays(ds, 1), to: b.to, label: b.label || ""});
+  } else blocks.push({id: newId(), from: ds, to: ds, label: ""});
+  mergeBlocks(); saveBlocks();
+}
+const blockOn = ds => blocks.find(b => b.from <= ds && ds <= b.to);
+const shortD = ds => new Date(ds + "T00:00").toLocaleDateString("es", {day: "numeric", month: "short"});
+const rangeLabel = b => (b.from === b.to ? shortD(b.from) : shortD(b.from) + " al " + shortD(b.to)) + (b.label ? " · " + b.label : "");
+function reminderText(a) {
+  const diff = Math.round((new Date(a.date + "T00:00") - new Date(ymd(new Date()) + "T00:00")) / 864e5);
+  const day = diff === 0 ? "de hoy" : diff === 1 ? "de mañana" : "del " + new Date(a.date + "T00:00").toLocaleDateString("es", {weekday: "long", day: "numeric", month: "long"}).replace(",", "");
+  return "Hola. Te escribo para confirmar tu cita " + day + " a las " + fmt12(a.time) + ".";
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(items)); }
+  catch (e) { memOnly = true; }
+  render();
+  syncNotifs();
+}
+function dayLabel(ds) {
+  const d = new Date(ds + "T00:00"), t = new Date(ymd(new Date()) + "T00:00");
+  const diff = Math.round((d - t) / 864e5);
+  const txt = d.toLocaleDateString("es", {weekday: "long", day: "numeric", month: "long"});
+  return diff === 0 ? "Hoy, " + txt : diff === 1 ? "Mañana, " + txt : cap(txt);
+}
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const key = a => a.date + "T" + a.time;
+
+function card(a) {
+  const pend = a.status === "pending";
+  const price = +a.price || 0, dep = +a.deposit || 0;
+  let chips = "";
+  if (a.status === "done") chips += '<span class="chip ok">Completada</span>';
+  if (a.status === "cancelled") chips += '<span class="chip warn">Cancelada</span>';
+  if (pend && a.date < ymd(new Date())) chips += '<span class="chip warn">Fecha pasada</span>';
+  if (pend && blockOn(a.date)) chips += '<span class="chip warn">Día bloqueado</span>';
+  if (price > 0) {
+    if (dep >= price) chips += '<span class="chip ok">Pagado ' + money(price) + '</span>';
+    else if (dep > 0) chips += '<span class="chip info">Abono ' + money(dep) + ', falta ' + money(price - dep) + '</span>';
+    else chips += '<span class="chip warn">Sin abono, precio ' + money(price) + '</span>';
+  } else if (dep > 0) chips += '<span class="chip info">Abono ' + money(dep) + '</span>';
+  const c = String(a.phone || "").trim();
+  const isIg = c.startsWith("@") || /[A-Za-z_]/.test(c);
+  const handle = c.replace(/^@/, "").replace(/\s+/g, "");
+  const digits = c.replace(/\D/g, "");
+  const wa = isIg && handle ? '<a class="btn" target="_blank" rel="noopener" href="https://instagram.com/' + encodeURIComponent(handle) + '">Instagram</a>' : digits ? '<button class="btn" data-act="wachat">WhatsApp</button>' : "";
+  const isWa = !(isIg && handle) && digits;
+  const rem = !pend ? "" : isWa ? '<button class="btn" data-act="warem">Recordatorio</button>' : isIg && handle ? '<button class="btn" data-act="igrem">Recordatorio por DM</button>' : '<button class="btn" data-act="copyrem">Copiar recordatorio</button>';
+  const ph = a.photos && a.photos.length ? '<button class="btn" data-act="photos">Fotos (' + a.photos.length + ')</button>' : "";
+  const acts = pend
+    ? wa + rem + ph + '<button class="btn main" data-act="done">Completada</button><button class="btn" data-act="edit">Editar</button><button class="btn" data-act="swap">Intercambiar</button><button class="btn bad" data-act="cancel">' + (armed === a.id + "c" ? "¿Seguro? Toca otra vez" : "Cancelar") + '</button>'
+    : wa + ph + '<button class="btn" data-act="reopen">Reabrir</button><button class="btn" data-act="edit">Editar</button>';
+  return '<div class="card" data-id="' + a.id + '"><div class="time">' + esc(a.time) + '</div><div>' +
+    '<div class="name">' + esc(a.name) + '</div>' + (a.piece ? '<div class="piece">' + esc(a.piece) + '</div>' : "") +
+    (chips ? '<div class="chips">' + chips + '</div>' : "") + (a.notes ? '<p class="notes">' + esc(a.notes) + '</p>' : "") +
+    '<div class="acts">' + acts + '</div></div></div>';
+}
+
+const norm = t => String(t == null ? "" : t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+function renderSearch(raw) {
+  const words = norm(raw).split(/\s+/).filter(Boolean);
+  const res = items.filter(a => {
+    const hay = norm([a.name, a.phone, a.piece, a.notes].join(" ")), dg = String(a.phone || "").replace(/\D/g, "");
+    return words.every(w => { const wd = w.replace(/\D/g, ""); return hay.includes(w) || (wd.length >= 3 && dg.includes(wd)); });
+  }).sort((a, b) => key(b).localeCompare(key(a)));
+  if (!res.length) { $("list").innerHTML = '<div class="empty">No encontré citas con “' + esc(raw.trim()) + '”.</div>'; return; }
+  let out = '<p class="cal-sum" style="margin:12px 0 4px">' + res.length + (res.length === 1 ? " resultado" : " resultados") + '</p>', last = "";
+  res.forEach(a => { if (a.date !== last) { last = a.date; out += '<div class="day">' + esc(dayLabel(a.date)) + '</div>'; } out += card(a); });
+  $("list").innerHTML = out;
+}
+function render() {
+  renderBkBanner();
+  const today = ymd(new Date());
+  const todayN = items.filter(a => a.status === "pending" && a.date === today).length;
+  $("sub").textContent = todayN ? "Hoy tienes " + todayN + (todayN === 1 ? " cita" : " citas") : "Hoy no tienes citas, pero ya las habrá ;)";
+  $("warn").innerHTML = memOnly ? '<div class="banner">Este navegador no permite guardar datos. Haz una copia de seguridad antes de cerrar.</div>' : "";
+  $("t-next").setAttribute("aria-pressed", tab === "next");
+  $("t-hist").setAttribute("aria-pressed", tab === "hist");
+  $("t-cal").setAttribute("aria-pressed", tab === "cal");
+  if ($("q").value.trim()) { renderSearch($("q").value); return; }
+  if (tab === "cal") { renderCal(); return; }
+  const list = items.filter(a => (tab === "next") === (a.status === "pending")).sort((a, b) => tab === "next" ? key(a).localeCompare(key(b)) : key(b).localeCompare(key(a)));
+  if (!list.length) {
+    $("list").innerHTML = '<div class="empty">' + (tab === "next" ? "Aún no hay citas pendientes. Toca “Nueva cita” para añadir la primera." : "Aquí aparecerán las citas completadas o canceladas.") + '</div>';
+    return;
+  }
+  let out = "", last = "";
+  list.forEach(a => { if (a.date !== last) { last = a.date; out += '<div class="day">' + esc(dayLabel(a.date)) + '</div>'; } out += card(a); });
+  $("list").innerHTML = out;
+}
+
+let calM = new Date(new Date().getFullYear(), new Date().getMonth(), 1), calSel = ymd(new Date());
+function renderCal() {
+  const y = calM.getFullYear(), m = calM.getMonth(), today = ymd(new Date());
+  const offset = (new Date(y, m, 1).getDay() + 6) % 7, dim = new Date(y, m + 1, 0).getDate();
+  const info = {};
+  items.filter(a => a.status !== "cancelled").forEach(a => { const i = info[a.date] || (info[a.date] = {n: 0, pend: 0}); i.n++; if (a.status === "pending") i.pend++; });
+  const pre = y + "-" + String(m + 1).padStart(2, "0") + "-";
+  let nCitas = 0, nDias = 0;
+  for (let d = 1; d <= dim; d++) { const i = info[pre + String(d).padStart(2, "0")]; if (i) { nCitas += i.n; nDias++; } }
+  const modeRow = '<div class="acts" style="justify-content:center;margin-bottom:10px"><button class="btn' + (calBlockMode ? ' main' : '') + '" data-bmode>' + (calBlockMode ? 'Terminar de bloquear' : 'Modo bloquear') + '</button><button class="btn" data-block>Bloquear varios días</button><button class="btn" data-share>Compartir disponibilidad</button></div>' + (calBlockMode ? '<p class="cal-leg" style="margin:0 0 10px">Toca los días para bloquearlos o desbloquearlos.</p>' : '');
+  let out = '<div class="cal-head"><button class="cal-nav" data-nav="-1" aria-label="Mes anterior">‹</button><h2>' + esc(cap(calM.toLocaleDateString("es", {month: "long", year: "numeric"}))) + '</h2><button class="cal-nav" data-nav="1" aria-label="Mes siguiente">›</button></div>' + modeRow + '<div class="cal-grid">';
+  ["L", "M", "M", "J", "V", "S", "D"].forEach(w => out += '<div class="cal-w">' + w + '</div>');
+  for (let i = 0; i < offset; i++) out += "<div></div>";
+  for (let d = 1; d <= dim; d++) {
+    const ds = pre + String(d).padStart(2, "0"), i = info[ds], bl = blockOn(ds);
+    const cls = "cd" + (i ? (i.pend ? " pend" : " onlydone") : "") + (bl ? " blk" : "") + (ds === today ? " today" : "") + (ds === calSel ? " sel" : "");
+    out += '<button class="' + cls + '" data-day="' + ds + '"><span>' + d + '</span><small>' + (bl ? "✕" : "") + (bl && i ? " " : "") + (i ? i.n : "") + '</small></button>';
+  }
+  out += '</div><p class="cal-sum">' + (nCitas ? "Este mes: " + nCitas + (nCitas === 1 ? " cita" : " citas") + " en " + nDias + (nDias === 1 ? " día" : " días") : "No hay citas este mes.") + '</p>' +
+    '<p class="cal-leg">Azul: día libre · Dorado: con citas (número) o bloqueado (✕) · Borde dorado: solo completadas</p>';
+  let tot = 0, cob = 0, hechas = 0;
+  items.filter(a => a.status !== "cancelled" && a.date.startsWith(pre)).forEach(a => {
+    const pr = +a.price || 0, dp = +a.deposit || 0;
+    tot += pr > 0 ? pr : dp; cob += pr > 0 ? Math.min(dp, pr) : dp; if (a.status === "done") hechas++;
+  });
+  if (nCitas) out += '<div class="fin"><h3>Resumen del mes</h3><div class="g"><div><b>' + money(cob) + '</b><span>Cobrado</span></div><div><b>' + money(tot - cob) + '</b><span>Por cobrar</span></div><div><b>' + money(tot) + '</b><span>Total</span></div></div><p>' + hechas + (hechas === 1 ? " cita completada" : " citas completadas") + ' de ' + nCitas + '. Cobrado = abonos registrados; si te pagan el resto, súmalo al abono de la cita.</p></div>';
+
+  if (calSel && calSel.startsWith(pre) && !calBlockMode) {
+    const day = items.filter(a => a.date === calSel).sort((a, b) => a.time.localeCompare(b.time));
+    out += '<div class="day">' + esc(dayLabel(calSel)) + '</div>';
+    const sb = blockOn(calSel);
+    if (sb) out += '<div class="banner">Día bloqueado: ' + esc(rangeLabel(sb)) + '</div><button class="btn" data-unblock="' + sb.id + '" style="margin-bottom:10px">Quitar este bloqueo</button>';
+    out += day.length ? day.map(card).join("") : '<div class="empty" style="padding:20px 10px">No hay citas este día.</div>';
+    out += '<div class="acts"><button class="btn main" data-new="' + calSel + '">Agendar este día</button>' + (sb ? '' : '<button class="btn" data-blockday="' + calSel + '">Bloquear este día</button>') + '</div>';
+  }
+  $("list").innerHTML = out;
+}
+$("list").addEventListener("click", e => {
+  const nav = e.target.closest("[data-nav]"), day = e.target.closest("[data-day]"), nw = e.target.closest("[data-new]"), bk = e.target.closest("[data-block]"), bm = e.target.closest("[data-bmode]"), sh = e.target.closest("[data-share]"), bd = e.target.closest("[data-blockday]"), ub = e.target.closest("[data-unblock]");
+  if (nav) { calM = new Date(calM.getFullYear(), calM.getMonth() + (+nav.dataset.nav), 1); calSel = null; renderCal(); }
+  else if (sh) openShare();
+  else if (bm) { calBlockMode = !calBlockMode; renderCal(); }
+  else if (bd) toggleDay(bd.dataset.blockday);
+  else if (day && calBlockMode) toggleDay(day.dataset.day);
+  else if (day) { calSel = calSel === day.dataset.day ? null : day.dataset.day; renderCal(); }
+  else if (nw) openForm(null, nw.dataset.new);
+  else if (bk) openBlocks();
+  else if (ub) { blocks = blocks.filter(b => b.id !== ub.dataset.unblock); saveBlocks(); }
+});
+
+const SHARE_TXT = "Los días disponibles son los marcados con amarillo.";
+function freeDays() {
+  const y = calM.getFullYear(), m = calM.getMonth(), dim = new Date(y, m + 1, 0).getDate(), today = ymd(new Date());
+  const busy = new Set(items.filter(a => a.status !== "cancelled").map(a => a.date));
+  const out = [];
+  for (let d = 1; d <= dim; d++) { const ds = ymd(new Date(y, m, d)); if (ds >= today && !blockOn(ds) && !busy.has(ds)) out.push(d); }
+  return out;
+}
+function drawShare() {
+  const cv = $("s-cv"), c = cv.getContext("2d"), W = 1080, H = 1350, pad = 60, cell = (W - pad * 2) / 7, Y = "#FACC15";
+  const y = calM.getFullYear(), m = calM.getMonth(), dim = new Date(y, m + 1, 0).getDate(), off = (new Date(y, m, 1).getDay() + 6) % 7;
+  const free = new Set(freeDays()), f = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+  c.fillStyle = "#0B0B0B"; c.fillRect(0, 0, W, H); c.textAlign = "center"; c.textBaseline = "middle";
+  c.fillStyle = "#FFFFFF"; c.font = "700 64px " + f; c.fillText("Disponibilidad", W / 2, 120);
+  c.fillStyle = Y; c.font = "500 48px " + f; c.fillText(cap(calM.toLocaleDateString("es", {month: "long", year: "numeric"})), W / 2, 195);
+  c.fillStyle = "#9AA1A8"; c.font = "500 32px " + f;
+  ["L", "M", "M", "J", "V", "S", "D"].forEach((w, i) => c.fillText(w, pad + cell * (i + 0.5), 300));
+  for (let d = 1; d <= dim; d++) {
+    const i = off + d - 1, cx = pad + (i % 7) * cell, cy = 340 + Math.floor(i / 7) * cell, r = cell - 12;
+    if (free.has(d)) { c.fillStyle = Y; c.beginPath(); c.roundRect(cx + 6, cy + 6, r, r, 18); c.fill(); c.fillStyle = "#0B0B0B"; c.font = "700 46px " + f; }
+    else { c.fillStyle = "#555B61"; c.font = "400 42px " + f; }
+    c.fillText(String(d), cx + cell / 2, cy + cell / 2);
+  }
+  c.fillStyle = Y; c.beginPath(); c.roundRect(pad, H - 120, 36, 36, 8); c.fill();
+  c.fillStyle = "#FFFFFF"; c.font = "400 36px " + f; c.textAlign = "left"; c.fillText("Día disponible", pad + 56, H - 102);
+}
+function openShare() { $("s-note").textContent = ""; $("s-txt").textContent = SHARE_TXT; drawShare(); $("sdlg").showModal(); }
+$("s-close").onclick = () => $("sdlg").close();
+$("s-img").onclick = async () => {
+  const P = (window.Capacitor && Capacitor.Plugins) || {}, cv = $("s-cv");
+  try {
+    if (P.Filesystem && P.Share) {
+      const w = await P.Filesystem.writeFile({path: "disponibilidad.png", data: cv.toDataURL("image/png").split(",")[1], directory: "CACHE"});
+      await P.Share.share({title: "Disponibilidad", text: SHARE_TXT, files: [w.uri]});
+    } else {
+      const blob = await new Promise(r => cv.toBlob(r, "image/png")), file = new File([blob], "disponibilidad.png", {type: "image/png"});
+      if (navigator.canShare && navigator.canShare({files: [file]})) await navigator.share({files: [file], text: SHARE_TXT});
+      else { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "disponibilidad.png"; a.click(); }
+    }
+  } catch (e) { if (!e || e.name !== "AbortError") $("s-note").textContent = "No se pudo compartir la foto."; }
+};
+function openBlocks() {
+  const d = calSel || ymd(new Date());
+  $("k-from").value = d; $("k-to").value = d; $("k-label").value = ""; $("kmsg").textContent = "";
+  listBlocks(); $("kdlg").showModal();
+}
+function listBlocks() {
+  const t = ymd(new Date());
+  const l = blocks.filter(b => b.to >= t).sort((a, b) => a.from.localeCompare(b.from));
+  $("klist").innerHTML = l.length ? l.map(b => '<div class="krow"><span>' + esc(rangeLabel(b)) + '</span><button class="btn bad" data-kdel="' + b.id + '">Quitar</button></div>').join("") : "";
+}
+$("klist").addEventListener("click", e => {
+  const b = e.target.closest("[data-kdel]"); if (!b) return;
+  blocks = blocks.filter(x => x.id !== b.dataset.kdel); saveBlocks(); listBlocks();
+});
+$("ksave").onclick = () => {
+  const f = $("k-from").value, t = $("k-to").value || f;
+  if (!f) { $("kmsg").textContent = "Elige la fecha de inicio."; return; }
+  if (t < f) { $("kmsg").textContent = "La fecha final no puede ser antes de la inicial."; return; }
+  blocks.push({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), from: f, to: t, label: $("k-label").value.trim()});
+  saveBlocks(); listBlocks(); $("kmsg").textContent = "Bloqueado: " + rangeLabel(blocks[blocks.length - 1]) + ".";
+};
+$("kclose").onclick = () => $("kdlg").close();
+let idbP, formPhotos = [], origPhotos = [], formSaved = false, urls = [];
+const idb = () => idbP || (idbP = new Promise((res, rej) => { const r = indexedDB.open("tattoo-fotos", 1); r.onupgradeneeded = () => r.result.createObjectStore("f"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }));
+const idbOp = (mode, fn) => idb().then(db => new Promise((res, rej) => { const t = db.transaction("f", mode), rq = fn(t.objectStore("f")); t.oncomplete = () => res(rq && rq.result); t.onerror = () => rej(t.error); }));
+const putPhoto = (id, blob) => idbOp("readwrite", st => st.put(blob, id));
+const getPhoto = id => idbOp("readonly", st => st.get(id)).catch(() => null);
+const delPhoto = id => idbOp("readwrite", st => st.delete(id)).catch(() => {});
+async function shrink(file) {
+  const bmp = await createImageBitmap(file), k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height); if (bmp.close) bmp.close();
+  return new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+}
+const freeUrls = () => { urls.forEach(u => URL.revokeObjectURL(u)); urls = []; };
+async function renderThumbs() {
+  freeUrls();
+  const blobs = await Promise.all(formPhotos.map(getPhoto));
+  $("f-thumbs").innerHTML = formPhotos.map((id, i) => { if (!blobs[i]) return ""; const u = URL.createObjectURL(blobs[i]); urls.push(u); return '<div class="th"><img src="' + u + '" alt="Foto de referencia"><button type="button" data-rmph="' + id + '" aria-label="Quitar foto">✕</button></div>'; }).join("");
+}
+$("f-addph").onclick = () => $("f-file").click();
+$("f-file").addEventListener("change", async () => {
+  const files = Array.from($("f-file").files || []); $("f-phnote").textContent = files.length ? "Agregando fotos…" : "";
+  let fail = 0;
+  for (const f of files) {
+    try { const id = newId(); await putPhoto(id, await shrink(f)); formPhotos.push(id); } catch (e) { fail++; }
+  }
+  $("f-file").value = ""; $("f-phnote").textContent = fail ? "No se pudo agregar " + fail + (fail === 1 ? " foto." : " fotos.") : "";
+  renderThumbs();
+});
+$("f-thumbs").addEventListener("click", e => {
+  const b = e.target.closest("[data-rmph]"); if (!b) return;
+  const id = b.dataset.rmph; formPhotos = formPhotos.filter(x => x !== id);
+  if (!origPhotos.includes(id)) delPhoto(id);
+  renderThumbs();
+});
+async function openPhotos(a) {
+  $("p-title").textContent = a.piece ? a.name + " · " + a.piece : a.name;
+  $("p-body").innerHTML = ""; $("pdlg").showModal(); freeUrls();
+  const blobs = await Promise.all((a.photos || []).map(getPhoto));
+  $("p-body").innerHTML = blobs.filter(Boolean).map(b => { const u = URL.createObjectURL(b); urls.push(u); return '<img src="' + u + '" alt="Foto de referencia">'; }).join("") || '<div class="empty">Las fotos de esta cita no están en este teléfono.</div>';
+}
+$("p-close").onclick = () => $("pdlg").close();
+$("pdlg").addEventListener("close", freeUrls);
+let xA = null, xB = null, xTime = true, xTA = "", xTB = "";
+const longD = ds => cap(new Date(ds + "T00:00").toLocaleDateString("es", {weekday: "long", day: "numeric", month: "long"}));
+function slotWarn(who, date, time, others) {
+  const w = [], bl = blockOn(date), s0 = hm(time), e0 = s0 + durOf(who);
+  if (bl) w.push(who.name + ": ese día está bloqueado" + (bl.label ? " (" + bl.label + ")" : "") + ".");
+  others.filter(x => x.date === date && x.status !== "cancelled").forEach(x => {
+    const s1 = hm(x.time), e1 = s1 + durOf(x);
+    if (s0 < e1 && s1 < e0) w.push(who.name + ": se empalma con " + x.name + " (" + x.time + " a " + hhmm(e1) + ").");
+  });
+  return w;
+}
+function suggestTimes() {
+  const a = items.find(x => x.id === xA), b = items.find(x => x.id === xB); if (!a || !b) return;
+  xTA = xTime ? b.time : a.time; xTB = xTime ? a.time : b.time;
+}
+function updateSwap() {
+  const a = items.find(x => x.id === xA), b = items.find(x => x.id === xB); if (!a || !b) return;
+  const ok = /^\d{2}:\d{2}$/.test(xTA || "") && /^\d{2}:\d{2}$/.test(xTB || "");
+  const changed = ok && (b.date !== a.date || xTA !== a.time || xTB !== b.time);
+  let warn = [];
+  if (ok) {
+    const others = items.filter(x => x.id !== a.id && x.id !== b.id);
+    warn = slotWarn(a, b.date, xTA, others).concat(slotWarn(b, a.date, xTB, others));
+    if (b.date === a.date && hm(xTA) < hm(xTB) + durOf(b) && hm(xTB) < hm(xTA) + durOf(a)) warn.push("Las dos citas quedarían empalmadas entre sí.");
+  }
+  $("x-dyn").innerHTML = (!ok ? '<p style="color:var(--muted)">Elige la hora de las dos citas.</p>' : changed ? "" : '<p style="color:var(--muted)">Sin cambios: ambas citas ya están en esa fecha y hora.</p>') +
+    (warn.length ? '<div class="banner" style="margin-top:0">' + warn.map(esc).join("<br>") + '</div>' : "");
+  $("x-bar").innerHTML = '<button class="btn" data-xback>Volver</button><button class="btn main" data-xok' + (changed ? "" : " disabled") + '>' + (warn.length ? "Confirmar igual" : "Confirmar intercambio") + '</button>';
+}
+function renderSwap() {
+  const a = items.find(x => x.id === xA);
+  if (!a) { $("xdlg").close(); return; }
+  if (!xB) {
+    const list = items.filter(x => x.id !== xA && x.status === "pending").sort((p, q) => key(p).localeCompare(key(q)));
+    $("x-body").innerHTML = '<p style="margin-top:0;color:var(--muted)">Elige la cita con la que quieres intercambiar el día de <b>' + esc(a.name) + '</b> (' + esc(longD(a.date)) + ' · ' + a.time + ').</p>' +
+      (list.length ? list.map(x => '<button class="btn xrow" data-xb="' + x.id + '">' + esc(x.name) + ' · ' + esc(longD(x.date)) + ' · ' + x.time + '</button>').join("") : '<div class="empty" style="padding:20px 10px">No hay otras citas pendientes.</div>');
+    $("x-bar").innerHTML = '<button class="btn" data-xclose>Cerrar</button>';
+    return;
+  }
+  const b = items.find(x => x.id === xB);
+  if (!b) { xB = null; renderSwap(); return; }
+  const prev = (x, other, who) => '<div class="xprev"><b>' + esc(x.name) + '</b><br><span style="color:var(--muted)">' + esc(longD(x.date)) + ' · ' + x.time + '</span><br>→ ' + esc(longD(other.date)) +
+    '<label style="margin-top:6px">Hora nueva<input type="time" data-xt="' + who + '" value="' + (who === "a" ? xTA : xTB) + '"></label></div>';
+  $("x-body").innerHTML = '<p style="margin-top:0">Se intercambian los días. Ajusta la hora de cada cita si hace falta:</p>' + prev(a, b, "a") + prev(b, a, "b") +
+    '<button class="btn" data-xtoggle style="margin-bottom:12px">Horas sugeridas: ' + (xTime ? "intercambiadas" : "las propias de cada uno") + '</button><div id="x-dyn"></div>';
+  updateSwap();
+}
+$("xdlg").addEventListener("input", e => {
+  const t = e.target.closest("[data-xt]"); if (!t) return;
+  if (t.dataset.xt === "a") xTA = t.value; else xTB = t.value;
+  updateSwap();
+});
+$("xdlg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.xb) { xB = b.dataset.xb; suggestTimes(); renderSwap(); }
+  else if ("xtoggle" in b.dataset) { xTime = !xTime; suggestTimes(); renderSwap(); }
+  else if ("xback" in b.dataset) { xB = null; renderSwap(); }
+  else if ("xclose" in b.dataset) $("xdlg").close();
+  else if ("xok" in b.dataset) {
+    const a = items.find(x => x.id === xA), c = items.find(x => x.id === xB); if (!a || !c) return;
+    const da = a.date; a.date = c.date; c.date = da; a.time = xTA; c.time = xTB;
+    $("xdlg").close(); save();
+  }
+});
+const openUrl = url => { const l = document.createElement("a"); l.href = url; l.target = "_blank"; l.rel = "noopener"; l.click(); };
+async function openWa(a, withText) {
+  const digits = String(a.phone || "").replace(/\D/g, ""), text = withText ? reminderText(a) : "";
+  try {
+    if (window.Capacitor && Capacitor.registerPlugin && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) { await Capacitor.registerPlugin("WaBusiness").open({phone: digits, text}); return; }
+  } catch (e) {}
+  openUrl("https://wa.me/" + digits + (text ? "?text=" + encodeURIComponent(text) : ""));
+}
+async function igDm(a, btn) {
+  const handle = String(a.phone || "").trim().replace(/^@/, "").replace(/\s+/g, "");
+  try { await navigator.clipboard.writeText(reminderText(a)); btn.textContent = "Copiado ✓ Pégalo en el DM"; }
+  catch (e) { btn.textContent = "No se pudo copiar"; return; }
+  openUrl("https://ig.me/m/" + encodeURIComponent(handle));
+}
+function openForm(id, presetDate) {
+  editId = id || null;
+  const a = items.find(x => x.id === id) || {date: presetDate};
+  $("dt").textContent = id ? "Editar cita" : "Nueva cita";
+  $("f-name").value = a.name || ""; $("f-phone").value = a.phone || "";
+  $("f-date").value = a.date || ymd(new Date()); $("f-time").value = a.time || "10:30";
+  $("f-dur").value = a.dur || 2; warnSig = null; $("save").textContent = "Guardar cita";
+  $("f-piece").value = a.piece || "";
+  $("f-price").value = a.price || ""; $("f-dep").value = a.deposit || ""; $("f-notes").value = a.notes || "";
+  $("err").textContent = ""; $("del").hidden = !id; $("del").textContent = "Eliminar";
+  origPhotos = (a.photos || []).slice(); formPhotos = origPhotos.slice(); formSaved = false; $("f-phnote").textContent = ""; renderThumbs();
+  $("dlg").showModal();
+}
+$("save").onclick = () => {
+  const name = $("f-name").value.trim(), date = $("f-date").value, time = $("f-time").value;
+  if (!name) { $("err").textContent = "Escribe el nombre del cliente."; return; }
+  if (!date || !time) { $("err").textContent = "Elige la fecha y la hora."; return; }
+  let dur = parseFloat($("f-dur").value); if (!(dur > 0)) dur = 2;
+  const msgs = [], bl = blockOn(date), s0 = hm(time), e0 = s0 + dur * 60;
+  if (bl) msgs.push("Ese día está bloqueado" + (bl.label ? " (" + bl.label + ")" : "") + ".");
+  items.filter(x => x.id !== editId && x.date === date && x.status !== "cancelled").forEach(x => {
+    const s1 = hm(x.time), e1 = s1 + durOf(x);
+    if (s0 < e1 && s1 < e0) msgs.push("Se empalma con " + x.name + " (" + x.time + " a " + hhmm(e1) + ").");
+  });
+  const sig = msgs.join("|") + date + time + dur + editId;
+  if (msgs.length && warnSig !== sig) { warnSig = sig; $("err").textContent = msgs.join(" ") + " Toca Guardar otra vez para confirmar."; $("save").textContent = "Guardar igual"; return; }
+  const data = {dur, name, phone: $("f-phone").value.trim(), date, time, piece: $("f-piece").value.trim(), price: $("f-price").value, deposit: $("f-dep").value, notes: $("f-notes").value.trim(), photos: formPhotos.slice()};
+  if (editId) Object.assign(items.find(x => x.id === editId), data);
+  else items.push(Object.assign({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), status: "pending"}, data));
+  formSaved = true; origPhotos.filter(x => !formPhotos.includes(x)).forEach(delPhoto);
+  $("dlg").close(); save();
+};
+$("cancel").onclick = () => $("dlg").close();
+$("del").onclick = () => {
+  if (armed !== "del") { armed = "del"; $("del").textContent = "¿Seguro? Toca otra vez"; return; }
+  armed = null; items = items.filter(x => x.id !== editId); new Set(origPhotos.concat(formPhotos)).forEach(delPhoto); formSaved = true; $("dlg").close(); save();
+};
+$("dlg").addEventListener("close", () => { armed = null; warnSig = null; if (!formSaved) formPhotos.filter(x => !origPhotos.includes(x)).forEach(delPhoto); freeUrls(); });
+
+$("list").onclick = e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = b.closest(".card").dataset.id, a = items.find(x => x.id === id), act = b.dataset.act;
+  if (act === "edit") return openForm(id);
+  if (act === "wachat" || act === "warem") return openWa(a, act === "warem");
+  if (act === "igrem") return igDm(a, b);
+  if (act === "swap") { xA = id; xB = null; renderSwap(); $("xdlg").showModal(); return; }
+  if (act === "photos") return openPhotos(a);
+  if (act === "copyrem") {
+    const t = reminderText(a);
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { b.textContent = "Copiado ✓"; }).catch(() => { b.textContent = "No se pudo copiar"; });
+    return;
+  }
+  if (act === "cancel") { if (armed !== id + "c") { armed = id + "c"; render(); return; } a.status = "cancelled"; }
+  if (act === "done") a.status = "done";
+  if (act === "reopen") a.status = "pending";
+  armed = null; save();
+};
+$("t-next").onclick = () => { tab = "next"; $("q").value = ""; calBlockMode = false; render(); };
+$("t-hist").onclick = () => { tab = "hist"; $("q").value = ""; calBlockMode = false; render(); };
+$("q").addEventListener("input", render);
+$("t-cal").onclick = () => { tab = "cal"; $("q").value = ""; calBlockMode = false; render(); };
+$("fab").onclick = () => openForm();
+
+$("tn").onclick = async () => {
+  const LN = ln();
+  const show = (t, ok) => { $("note").innerHTML = '<div class="banner' + (ok ? ' ok' : '') + '">' + esc(t) + '</div>'; };
+  if (!LN) return show("Las notificaciones solo funcionan en la app instalada en el teléfono.", false);
+  try {
+    let r = await LN.checkPermissions();
+    if (r.display !== "granted") r = await LN.requestPermissions();
+    if (r.display !== "granted") return show("Las notificaciones están bloqueadas. Actívalas en los ajustes del teléfono, en Apps, jcarrasco_tattoo, Notificaciones.", false);
+    await ensureChannel(LN);
+    await LN.schedule({notifications: [{id: 1, title: "Prueba de aviso", body: "Si ves esto, las notificaciones funcionan.", channelId: CH, schedule: {at: new Date(Date.now() + 10000), allowWhileIdle: true}}]});
+    const p = await LN.getPending();
+    show("Permiso concedido. En 10 segundos te llegará un aviso de prueba. Avisos de citas programados: " + p.notifications.filter(x => x.id !== 1).length + ".", true);
+  } catch (e) { show("No se pudo programar el aviso: " + (e && e.message ? e.message : e), false); }
+};
+
+const MKEY = "tattoo-backup-mail", LBKEY = "tattoo-last-backup", DKEY = "tattoo-backup-later";
+const backupJson = () => JSON.stringify({citas: items, bloqueos: blocks});
+function renderBkBanner() {
+  const el = $("bkbn"); if (!el) return;
+  let last = 0, dis = "";
+  try { last = +localStorage.getItem(LBKEY) || 0; dis = localStorage.getItem(DKEY) || ""; } catch (e) {}
+  const days = last ? Math.floor((Date.now() - last) / 864e5) : null;
+  if (items.length < (last ? 1 : 3) || dis === ymd(new Date()) || (days !== null && days < 7)) { el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="bkn">' + (days === null ? "Aún no has enviado una copia de seguridad de tus citas." : "Hace " + days + " días que no envías una copia de seguridad.") + '<div class="acts" style="margin-top:8px"><button class="btn main" data-bkopen>Enviar copia</button><button class="btn" data-bklater>Luego</button></div></div>';
+}
+$("bkbn").addEventListener("click", e => {
+  if (e.target.closest("[data-bkopen]")) $("bk").onclick();
+  else if (e.target.closest("[data-bklater]")) { try { localStorage.setItem(DKEY, ymd(new Date())); } catch (x) {} renderBkBanner(); }
+});
+$("bk").onclick = () => {
+  $("bt").value = backupJson(); $("bmsg").textContent = "";
+  try { $("b-mail").value = localStorage.getItem(MKEY) || ""; } catch (e) {}
+  $("bdlg").showModal();
+};
+$("bmail").onclick = async () => {
+  const to = $("b-mail").value.trim();
+  if (to && !/^\S+@\S+\.\S+$/.test(to)) { $("bmsg").textContent = "Revisa el email: no parece válido."; return; }
+  try { localStorage.setItem(MKEY, to); } catch (e) {}
+  const json = backupJson(), subject = "Copia de seguridad de la agenda · " + ymd(new Date());
+  const text = "Copia de seguridad de la agenda. Para restaurarla, abre la app, toca Copia de seguridad y elige Restaurar desde archivo.";
+  const P = (window.Capacitor && Capacitor.Plugins) || {}, native = window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform();
+  try {
+    if (native) {
+      try { await Capacitor.registerPlugin("BackupMail").send({to, subject, text, json}); }
+      catch (e) {
+        const w = await P.Filesystem.writeFile({path: "copia-agenda.json", data: btoa(unescape(encodeURIComponent(json))), directory: "CACHE"});
+        await P.Share.share({title: subject, text, files: [w.uri]});
+      }
+    } else {
+      const blob = new Blob([json], {type: "application/json"}), l = document.createElement("a");
+      l.href = URL.createObjectURL(blob); l.download = "copia-agenda.json"; l.click();
+    }
+    try { localStorage.setItem(LBKEY, String(Date.now())); } catch (e) {}
+    renderBkBanner(); $("bmsg").textContent = "Elige tu correo en la ventana que se abrió y toca enviar.";
+  } catch (e) { if (!e || e.name !== "AbortError") $("bmsg").textContent = "No se pudo preparar la copia."; }
+};
+$("bclose").onclick = () => $("bdlg").close();
+$("bcopy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("bt").value); $("bmsg").textContent = "Copiado."; }
+  catch (e) { $("bt").select(); $("bmsg").textContent = "No se pudo copiar solo: el texto está seleccionado, cópialo a mano."; }
+};
+const readB64 = blob => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(blob); });
+async function buildFullBackup() {
+  const parts = ['{"citas":', JSON.stringify(items), ',"bloqueos":', JSON.stringify(blocks), ',"fotos":{'];
+  const ids = Array.from(new Set(items.flatMap(a => a.photos || [])));
+  let n = 0;
+  for (const id of ids) {
+    const b = await getPhoto(id); if (!b) continue;
+    parts.push((n ? "," : "") + JSON.stringify(id) + ":" + JSON.stringify(await readB64(b))); n++;
+    $("bmsg").textContent = "Preparando copia con fotos… " + n + " de " + ids.length;
+  }
+  parts.push("}}");
+  return {blob: new Blob(parts, {type: "application/json"}), n};
+}
+$("bfull").onclick = async () => {
+  const subject = "Copia completa de la agenda · " + ymd(new Date()), text = "Copia completa de la agenda, con fotos. Para restaurarla, abre la app, toca Copia de seguridad y elige Restaurar desde archivo.";
+  const P = (window.Capacitor && Capacitor.Plugins) || {}, native = window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform();
+  $("bmsg").textContent = "Preparando copia con fotos…";
+  try {
+    const {blob, n} = await buildFullBackup(), name = "copia-agenda-completa.json";
+    if (native && P.Filesystem && P.Share) {
+      const CH = 786432; let off = 0, uri = null;
+      while (off < blob.size) {
+        const b64 = (await readB64(blob.slice(off, off + CH))).split(",")[1];
+        if (off === 0) uri = (await P.Filesystem.writeFile({path: name, data: b64, directory: "CACHE"})).uri;
+        else await P.Filesystem.appendFile({path: name, data: b64, directory: "CACHE"});
+        off += CH;
+      }
+      await P.Share.share({title: subject, text, files: [uri]});
+    } else {
+      const l = document.createElement("a"); l.href = URL.createObjectURL(blob); l.download = name; l.click();
+    }
+    try { localStorage.setItem(LBKEY, String(Date.now())); } catch (e) {}
+    renderBkBanner(); $("bmsg").textContent = "Copia con " + n + (n === 1 ? " foto" : " fotos") + " lista (" + (blob.size / 1048576).toFixed(1) + " MB). Elige Drive en el menú.";
+  } catch (e) { if (!e || e.name !== "AbortError") $("bmsg").textContent = "No se pudo preparar la copia completa."; }
+};
+async function restoreText(text) {
+  try {
+    const raw = JSON.parse(text), d = Array.isArray(raw) ? raw : raw && raw.citas;
+    if (!Array.isArray(d) || d.some(x => !x || !x.id || !x.date || !x.time)) throw new Error("bad");
+    const nb = !Array.isArray(raw) && Array.isArray(raw.bloqueos) ? raw.bloqueos.filter(b => b && b.id && b.from && b.to) : null;
+    const fotos = !Array.isArray(raw) && raw.fotos && typeof raw.fotos === "object" ? Object.entries(raw.fotos) : [];
+    $("bmsg").textContent = fotos.length ? "Restaurando " + fotos.length + " fotos…" : "";
+    let ok = 0;
+    for (const [id, url] of fotos) { try { await putPhoto(id, await (await fetch(url)).blob()); ok++; } catch (e) {} }
+    items = d; if (nb) { blocks = nb; try { localStorage.setItem(BKEY, JSON.stringify(blocks)); } catch (e) {} }
+    save(); $("bmsg").textContent = "Restauradas " + d.length + " citas" + (nb && nb.length ? " y " + nb.length + (nb.length === 1 ? " bloqueo" : " bloqueos") : "") + (fotos.length ? " y " + ok + (ok === 1 ? " foto" : " fotos") : "") + ".";
+  } catch (e) { $("bmsg").textContent = "Ese texto no es una copia válida."; }
+}
+const doRestore = () => restoreText($("bt").value);
+$("brest").onclick = doRestore;
+$("bfile").onclick = () => $("b-file").click();
+$("b-file").addEventListener("change", async () => {
+  const f = ($("b-file").files || [])[0]; if (!f) return;
+  try { await restoreText(await f.text()); } catch (e) { $("bmsg").textContent = "No se pudo leer el archivo."; }
+  $("b-file").value = "";
+});
+
+const RKEY = "tattoo-remind-time";
+let remind = "12:00";
+try { const r = localStorage.getItem(RKEY); if (/^\d{2}:\d{2}$/.test(r || "")) remind = r; } catch (e) {}
+$("rh").onclick = () => { $("r-time").value = remind; $("rmsg").textContent = ""; $("rdlg").showModal(); };
+$("rclose").onclick = () => $("rdlg").close();
+$("rsave").onclick = () => {
+  const v = $("r-time").value;
+  if (!/^\d{2}:\d{2}$/.test(v)) { $("rmsg").textContent = "Elige una hora válida."; return; }
+  remind = v;
+  try { localStorage.setItem(RKEY, v); } catch (e) {}
+  syncNotifs();
+  $("rmsg").textContent = "Listo: los avisos llegarán a las " + v + ".";
+};
+const CH = "citas";
+const ensureChannel = async LN => { try { await LN.createChannel({id: CH, name: "Avisos de citas", description: "Recordatorios del día anterior", importance: 5, visibility: 1, vibration: true}); } catch (e) {} };
+const ln = () => (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.LocalNotifications) || null;
+const nid = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) % 2147483647 || 1; };
+async function syncNotifs() {
+  const LN = ln(); if (!LN) return;
+  try {
+    const p = await LN.getPending();
+    if (p.notifications.length) await LN.cancel({notifications: p.notifications});
+    const now = new Date(), list = [];
+    items.filter(a => a.status === "pending").forEach(a => {
+      const d = new Date(a.date + "T00:00"); d.setDate(d.getDate() - 1); const [rh, rm] = remind.split(":").map(Number); d.setHours(rh, rm, 0, 0);
+      if (d > now) list.push({id: nid(a.id), title: "Mañana tienes un tatuaje", body: a.name + " a las " + a.time + (a.piece ? ", " + a.piece : ""), channelId: CH, schedule: {at: d, allowWhileIdle: true}});
+    });
+    if (list.length) await LN.schedule({notifications: list});
+  } catch (e) {}
+}
+async function initNotifs() {
+  const LN = ln(); if (!LN) return;
+  try { const r = await LN.checkPermissions(); if (r.display !== "granted") await LN.requestPermissions(); } catch (e) {}
+  await ensureChannel(LN);
+  syncNotifs();
+}
+
+load(); render(); initNotifs();
+</script>
+</body>
+</html>
