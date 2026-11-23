@@ -1,0 +1,176 @@
+name: Construir APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Preparar proyecto
+        run: |
+          mkdir www assets
+          cp index.html www/index.html
+          cp icon-only.png icon-foreground.png icon-background.png assets/
+          npm init -y
+          npm i @capacitor/core @capacitor/android @capacitor/local-notifications @capacitor/share @capacitor/filesystem
+          npm i -D @capacitor/cli @capacitor/assets
+          npx cap init "jcarrasco_tattoo" com.jcarrasco.tattoo --web-dir www
+          npx cap add android
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
+          npx capacitor-assets generate --android
+
+      - name: Icono vectorial (nítido en cualquier pantalla)
+        run: |
+          RES=android/app/src/main/res
+          mkdir -p $RES/drawable $RES/mipmap-anydpi-v26 $RES/values
+          cat > $RES/values/eye_colors.xml <<'XML'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="eye_bg">#000000</color>
+          </resources>
+          XML
+          cat > $RES/drawable/ic_eye_foreground.xml <<'XML'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="1024"
+              android:viewportHeight="1024">
+              <group android:pivotX="512" android:pivotY="509" android:scaleX="0.85" android:scaleY="0.85">
+                  <path android:fillColor="#1E8E96" android:pathData="M190,512Q512,12 834,512Q512,1012 190,512Z"/>
+                  <path android:fillColor="#000000" android:pathData="M240,512Q512,102 784,512Q512,922 240,512Z"/>
+                  <path android:fillColor="#2EA899" android:pathData="M344,512a168,168 0 1,0 336,0a168,168 0 1,0 -336,0Z"/>
+                  <path android:fillColor="#000000" android:pathData="M482,512a30,160 0 1,0 60,0a30,160 0 1,0 -60,0Z"/>
+                  <path android:fillColor="#D2F3F0" android:pathData="M420,448a20,20 0 1,0 40,0a20,20 0 1,0 -40,0Z"/>
+                  <path android:fillColor="#2EA899" android:pathData="M292,330L330,250L368,330ZM474,330L512,250L550,330ZM656,330L694,250L732,330Z"/>
+              </group>
+          </vector>
+          XML
+          for f in ic_launcher ic_launcher_round; do
+            cat > $RES/mipmap-anydpi-v26/$f.xml <<'XML'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@color/eye_bg"/>
+              <foreground android:drawable="@drawable/ic_eye_foreground"/>
+          </adaptive-icon>
+          XML
+          done
+          npx cap sync android
+
+      - name: WhatsApp Business (plugin nativo)
+        run: |
+          JAVA=android/app/src/main/java/com/jcarrasco/tattoo
+          mkdir -p $JAVA
+          cat > $JAVA/WaBusinessPlugin.java <<'JAVA'
+          package com.jcarrasco.tattoo;
+
+          import android.content.Intent;
+          import android.net.Uri;
+          import com.getcapacitor.Plugin;
+          import com.getcapacitor.PluginCall;
+          import com.getcapacitor.PluginMethod;
+          import com.getcapacitor.annotation.CapacitorPlugin;
+
+          @CapacitorPlugin(name = "WaBusiness")
+          public class WaBusinessPlugin extends Plugin {
+              @PluginMethod
+              public void open(PluginCall call) {
+                  String phone = call.getString("phone", "");
+                  String text = call.getString("text", "");
+                  try {
+                      String url = "https://wa.me/" + phone + (text.isEmpty() ? "" : "?text=" + Uri.encode(text));
+                      Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                      i.setPackage("com.whatsapp.w4b");
+                      i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                      getContext().startActivity(i);
+                      call.resolve();
+                  } catch (Exception e) {
+                      call.reject("no_business");
+                  }
+              }
+          }
+          JAVA
+          cat > $JAVA/BackupMailPlugin.java <<'JAVA'
+          package com.jcarrasco.tattoo;
+
+          import android.content.Intent;
+          import android.net.Uri;
+          import androidx.core.content.FileProvider;
+          import com.getcapacitor.Plugin;
+          import com.getcapacitor.PluginCall;
+          import com.getcapacitor.PluginMethod;
+          import com.getcapacitor.annotation.CapacitorPlugin;
+          import java.io.File;
+          import java.io.FileOutputStream;
+
+          @CapacitorPlugin(name = "BackupMail")
+          public class BackupMailPlugin extends Plugin {
+              @PluginMethod
+              public void send(PluginCall call) {
+                  try {
+                      String to = call.getString("to", "");
+                      String subject = call.getString("subject", "Copia de seguridad");
+                      String text = call.getString("text", "");
+                      String json = call.getString("json", "");
+                      File f = new File(getContext().getCacheDir(), "copia-agenda.json");
+                      FileOutputStream o = new FileOutputStream(f);
+                      o.write(json.getBytes("UTF-8"));
+                      o.close();
+                      Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", f);
+                      Intent i = new Intent(Intent.ACTION_SEND);
+                      i.setType("application/json");
+                      if (!to.isEmpty()) i.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+                      i.putExtra(Intent.EXTRA_SUBJECT, subject);
+                      i.putExtra(Intent.EXTRA_TEXT, text);
+                      i.putExtra(Intent.EXTRA_STREAM, uri);
+                      i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                      Intent c = Intent.createChooser(i, "Enviar copia");
+                      c.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                      getContext().startActivity(c);
+                      call.resolve();
+                  } catch (Exception e) {
+                      call.reject("fail");
+                  }
+              }
+          }
+          JAVA
+          cat > $JAVA/MainActivity.java <<'JAVA'
+          package com.jcarrasco.tattoo;
+
+          import android.os.Bundle;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  registerPlugin(WaBusinessPlugin.class);
+                  registerPlugin(BackupMailPlugin.class);
+                  super.onCreate(savedInstanceState);
+              }
+          }
+          JAVA
+          sed -i 's#</manifest>#    <queries>\n        <package android:name="com.whatsapp.w4b" />\n    </queries>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+
+      - name: Compilar APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jcarrasco_tattoo-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          
